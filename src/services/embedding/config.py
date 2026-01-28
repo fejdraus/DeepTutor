@@ -68,11 +68,7 @@ def _to_bool(value: Optional[str], default: bool) -> bool:
 
 def get_embedding_config() -> EmbeddingConfig:
     """
-    Load embedding configuration.
-
-    Priority:
-    1. Active configuration from unified config service
-    2. Environment variables (.env)
+    Load embedding configuration from environment variables.
 
     Returns:
         EmbeddingConfig: Configuration dataclass
@@ -80,27 +76,7 @@ def get_embedding_config() -> EmbeddingConfig:
     Raises:
         ValueError: If required configuration is missing
     """
-    # 1. Try to get active config from unified config service
-    try:
-        from src.services.config import get_active_embedding_config
-
-        config = get_active_embedding_config()
-        if config and config.get("model"):
-            return EmbeddingConfig(
-                binding=config.get("provider", "openai"),
-                model=config["model"],
-                api_key=config.get("api_key", ""),
-                base_url=config.get("base_url"),
-                api_version=config.get("api_version"),
-                dim=config.get("dimensions", 3072),
-            )
-    except ImportError:
-        # Unified config service not yet available, fall back to env
-        pass
-    except Exception as e:
-        logger.warning(f"Failed to load from unified config: {e}")
-
-    # 2. Fallback to environment variables
+    # Load from environment variables
     binding = _strip_value(os.getenv("EMBEDDING_BINDING", "openai"))
     model = _strip_value(os.getenv("EMBEDDING_MODEL"))
     api_key = _strip_value(os.getenv("EMBEDDING_API_KEY"))
