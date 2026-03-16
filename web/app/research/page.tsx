@@ -270,7 +270,7 @@ export default function ResearchPage() {
           {
             id: Date.now().toString(),
             role: "assistant",
-            content: `I have optimized your topic:\n\n**${optimizedTopic}**\n\n${data.reasoning || ""}\n\nStart research?`,
+            content: `${t("I have optimized your topic:")}\n\n**${optimizedTopic}**\n\n${data.reasoning || ""}\n\n${t("Start Research")}?`,
             type: "topic_proposal",
             proposal: optimizedTopic,
             original_topic: userMsg.content,
