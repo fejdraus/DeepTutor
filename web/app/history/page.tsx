@@ -369,7 +369,7 @@ export default function HistoryPage() {
                               <span
                                 className={`text-xs font-bold uppercase tracking-wider ${config.textColor} mb-1`}
                               >
-                                {entry.type}
+                                {t(entry.type.charAt(0).toUpperCase() + entry.type.slice(1))}
                               </span>
                               <span className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
@@ -384,7 +384,7 @@ export default function HistoryPage() {
                               </span>
                             </div>
                             <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 truncate pr-4">
-                              {entry.title}
+                              {entry.title?.replace(/\(choice\)/gi, `(${t("Multiple Choice")})`).replace(/\(written\)/gi, `(${t("Written")})`)}
                             </h3>
                             {entry.summary && (
                               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">

@@ -698,7 +698,7 @@ export default function SolverPage() {
               {t("Activity Log")}
             </h3>
             <span className="text-[10px] text-slate-400 dark:text-slate-500">
-              {solverState.logs.length} entries
+              {solverState.logs.length} {t("entries")}
             </span>
           </div>
 

@@ -600,8 +600,7 @@ export default function QuestionPage() {
                           </p>
                           <div className="flex items-center gap-2 mt-1">
                             <span className="text-xs text-slate-400 uppercase">
-                              {result.question.type ||
-                                result.question.question_type}
+                              {t((result.question.type || result.question.question_type) === "choice" ? "Multiple Choice" : "Written")}
                             </span>
                             {result.extended && (
                               <span className="text-xs text-amber-500">
@@ -624,11 +623,10 @@ export default function QuestionPage() {
                     <div className="px-6 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-white dark:bg-slate-800">
                       <div className="flex items-center gap-3">
                         <span className="text-sm font-medium text-slate-500">
-                          Question {activeIdx + 1}
+                          {t("Question")} {activeIdx + 1}
                         </span>
                         <span className="px-2 py-0.5 text-xs font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-700 text-slate-500 rounded">
-                          {currentQuestion.question.type ||
-                            currentQuestion.question.question_type}
+                          {t((currentQuestion.question.type || currentQuestion.question.question_type) === "choice" ? "Multiple Choice" : "Written")}
                         </span>
                         {currentQuestion.extended && (
                           <span className="px-2 py-0.5 text-xs font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-900/40 text-amber-600 rounded flex items-center gap-1">
@@ -811,18 +809,15 @@ export default function QuestionPage() {
                                         {t("KB Coverage")}
                                       </div>
                                       <div className="text-slate-600 dark:text-slate-300 prose prose-xs dark:prose-invert max-w-none">
-                                        <ReactMarkdown
-                                          remarkPlugins={[
-                                            remarkGfm,
-                                            remarkMath,
-                                          ]}
-                                          rehypePlugins={[rehypeKatex]}
-                                        >
-                                          {processLatexContent(
-                                            currentQuestion.validation
-                                              .kb_coverage,
-                                          )}
-                                        </ReactMarkdown>
+                                        {(() => {
+                                          const cov = currentQuestion.validation.kb_coverage;
+                                          if (typeof cov === "string") return <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{processLatexContent(cov)}</ReactMarkdown>;
+                                          const md = [
+                                            ...(cov.concepts_tested ? [`**${t("Concepts tested")}:** ${Array.isArray(cov.concepts_tested) ? cov.concepts_tested.join("; ") : cov.concepts_tested}`] : []),
+                                            ...(cov.kb_relation ? [`\n**${t("KB Connection")}:** ${cov.kb_relation}`] : []),
+                                          ].join("\n");
+                                          return <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{processLatexContent(md)}</ReactMarkdown>;
+                                        })()}
                                       </div>
                                     </div>
                                   )}
@@ -834,18 +829,15 @@ export default function QuestionPage() {
                                         {t("Extension Points")}
                                       </div>
                                       <div className="text-slate-600 dark:text-slate-300 prose prose-xs dark:prose-invert max-w-none">
-                                        <ReactMarkdown
-                                          remarkPlugins={[
-                                            remarkGfm,
-                                            remarkMath,
-                                          ]}
-                                          rehypePlugins={[rehypeKatex]}
-                                        >
-                                          {processLatexContent(
-                                            currentQuestion.validation
-                                              .extension_points,
-                                          )}
-                                        </ReactMarkdown>
+                                        {(() => {
+                                          const ext = currentQuestion.validation.extension_points;
+                                          if (typeof ext === "string") return <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{processLatexContent(ext)}</ReactMarkdown>;
+                                          const md = [
+                                            ...(ext.additional_knowledge_required ? [`**${t("Additional knowledge")}:** ${Array.isArray(ext.additional_knowledge_required) ? ext.additional_knowledge_required.join("; ") : ext.additional_knowledge_required}`] : []),
+                                            ...(ext.extension_explanation ? [`\n**${t("Explanation")}:** ${ext.extension_explanation}`] : []),
+                                          ].join("\n");
+                                          return <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>{processLatexContent(md)}</ReactMarkdown>;
+                                        })()}
                                       </div>
                                     </div>
                                   )}

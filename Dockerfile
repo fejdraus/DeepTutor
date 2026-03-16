@@ -15,7 +15,7 @@
 # ============================================
 # Stage 1: Frontend Builder
 # ============================================
-FROM node:22-slim AS frontend-builder
+FROM node:22.22.0-slim AS frontend-builder
 
 WORKDIR /app/web
 
@@ -130,6 +130,7 @@ COPY --from=frontend-builder /app/web/public ./web/public
 COPY --from=frontend-builder /app/web/package.json ./web/package.json
 COPY --from=frontend-builder /app/web/next.config.js ./web/next.config.js
 COPY --from=frontend-builder /app/web/node_modules ./web/node_modules
+COPY --from=frontend-builder /app/web/app ./web/app
 
 # Copy application source code
 COPY src/ ./src/
@@ -240,8 +241,10 @@ echo "[Frontend] 🚀 Starting Next.js frontend on port ${FRONTEND_PORT}..."
 
 # Replace placeholder in built Next.js files
 # This is necessary because NEXT_PUBLIC_* vars are inlined at build time
-find /app/web/.next -type f \( -name "*.js" -o -name "*.json" \) -exec \
-    sed -i "s|__NEXT_PUBLIC_API_BASE_PLACEHOLDER__|${API_BASE}|g" {} \; 2>/dev/null || true
+# Only process files that actually contain the placeholder to avoid corrupting binary chunks
+grep -rl "__NEXT_PUBLIC_API_BASE_PLACEHOLDER__" /app/web/.next/ 2>/dev/null | while read -r file; do
+    sed -i "s|__NEXT_PUBLIC_API_BASE_PLACEHOLDER__|${API_BASE}|g" "$file"
+done || true
 
 # Also update .env.local for any runtime reads
 echo "NEXT_PUBLIC_API_BASE=${API_BASE}" > /app/web/.env.local

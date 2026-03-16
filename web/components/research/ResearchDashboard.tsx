@@ -561,16 +561,16 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
               {global.stage === "idle"
                 ? t("Ready to Research")
                 : global.stage === "completed"
-                  ? "Research Complete"
+                  ? t("Research Complete")
                   : planning.optimizedTopic ||
                     planning.originalTopic ||
-                    "Research Dashboard"}
+                    t("Research Dashboard")}
             </h2>
             <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               <span
                 className={`uppercase font-bold tracking-wider ${isCompleted ? "text-emerald-600 dark:text-emerald-400" : ""}`}
               >
-                {global.stage}
+                {t(global.stage.charAt(0).toUpperCase() + global.stage.slice(1))}
               </span>
               {global.totalBlocks > 0 && (
                 <>

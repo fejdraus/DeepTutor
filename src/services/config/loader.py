@@ -177,12 +177,14 @@ def parse_language(language: Any) -> str:
     Supported language representations:
     - English: "en", "english", "English"
     - Chinese: "zh", "chinese", "Chinese"
+    - Russian: "ru", "russian", "Russian"
+    - Ukrainian: "uk", "ukrainian", "Ukrainian"
 
     Args:
-        language: Language configuration value (can be "zh"/"en"/"Chinese"/"English" etc.)
+        language: Language configuration value (can be "zh"/"en"/"ru"/"uk" etc.)
 
     Returns:
-        Standardized language code: 'zh' or 'en', defaults to 'zh'
+        Standardized language code: 'zh', 'en', 'ru', or 'uk', defaults to 'zh'
     """
     if not language:
         return "zh"
@@ -193,6 +195,10 @@ def parse_language(language: Any) -> str:
             return "en"
         if lang_lower in ["zh", "chinese", "cn"]:
             return "zh"
+        if lang_lower in ["ru", "russian"]:
+            return "ru"
+        if lang_lower in ["uk", "ukrainian"]:
+            return "uk"
 
     return "zh"  # Default Chinese
 

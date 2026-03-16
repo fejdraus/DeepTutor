@@ -6,6 +6,8 @@ import { ConfigType } from "./types";
 export const LANGUAGE_OPTIONS = [
   { value: "en" as const, label: "English" },
   { value: "zh" as const, label: "中文" },
+  { value: "uk" as const, label: "Українська" },
+  { value: "ru" as const, label: "Русский" },
 ];
 
 // Provider options - Cloud services first, then local deployments

@@ -1,7 +1,14 @@
-export type Language = "en" | "zh";
+export type Language = "en" | "zh" | "ru" | "uk";
+
+const LOCALE_MAP: Record<Language, string> = {
+  en: "en-US",
+  zh: "zh-CN",
+  ru: "ru-RU",
+  uk: "uk-UA",
+};
 
 export function getLocale(lang: Language): string {
-  return lang === "zh" ? "zh-CN" : "en-US";
+  return LOCALE_MAP[lang] || "en-US";
 }
 
 export function formatDate(

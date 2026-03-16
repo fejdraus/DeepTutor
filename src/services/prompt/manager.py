@@ -23,6 +23,43 @@ class PromptManager:
     LANGUAGE_FALLBACKS = {
         "zh": ["zh", "cn", "en"],
         "en": ["en", "zh", "cn"],
+        "ru": ["en"],
+        "uk": ["en"],
+    }
+
+    # Response language instructions appended to system prompts
+    # for languages that don't have native prompt files
+    RESPONSE_LANGUAGE_INSTRUCTIONS = {
+        "ru": (
+            "\n\nIMPORTANT — LANGUAGE RULES:\n"
+            "Your response language is Russian (Русский). Apply these rules:\n"
+            "1. Determine from the knowledge base content whether the subject is "
+            "FOREIGN LANGUAGE LEARNING (e.g. studying English, Spanish, French grammar/vocabulary) "
+            "or any OTHER subject (math, physics, history, programming, etc.).\n"
+            "2. If the subject is FOREIGN LANGUAGE LEARNING:\n"
+            "   - Write task instructions, question text, and explanations in Russian.\n"
+            "   - Keep example sentences, fill-in-the-blank sentences, and answer options "
+            "in the TARGET language being studied (the language from the knowledge base).\n"
+            "3. If the subject is ANY OTHER topic (math, science, etc.):\n"
+            "   - Write EVERYTHING in Russian: questions, answer options, explanations.\n"
+            "   - Translate content from the knowledge base into Russian.\n"
+            "   - Keep only universally recognized terms, formulas, and notation as-is."
+        ),
+        "uk": (
+            "\n\nIMPORTANT — LANGUAGE RULES:\n"
+            "Your response language is Ukrainian (Українська). Apply these rules:\n"
+            "1. Determine from the knowledge base content whether the subject is "
+            "FOREIGN LANGUAGE LEARNING (e.g. studying English, Spanish, French grammar/vocabulary) "
+            "or any OTHER subject (math, physics, history, programming, etc.).\n"
+            "2. If the subject is FOREIGN LANGUAGE LEARNING:\n"
+            "   - Write task instructions, question text, and explanations in Ukrainian.\n"
+            "   - Keep example sentences, fill-in-the-blank sentences, and answer options "
+            "in the TARGET language being studied (the language from the knowledge base).\n"
+            "3. If the subject is ANY OTHER topic (math, science, etc.):\n"
+            "   - Write EVERYTHING in Ukrainian: questions, answer options, explanations.\n"
+            "   - Translate content from the knowledge base into Ukrainian.\n"
+            "   - Keep only universally recognized terms, formulas, and notation as-is."
+        ),
     }
 
     # Supported modules
@@ -59,6 +96,12 @@ class PromptManager:
             return self._cache[cache_key]
 
         prompts = self._load_with_fallback(module_name, agent_name, lang_code, subdirectory)
+
+        # Inject response language instruction for non-native languages
+        if lang_code in self.RESPONSE_LANGUAGE_INSTRUCTIONS and prompts.get("system"):
+            prompts = dict(prompts)  # Don't mutate original
+            prompts["system"] = prompts["system"] + self.RESPONSE_LANGUAGE_INSTRUCTIONS[lang_code]
+
         self._cache[cache_key] = prompts
         return prompts
 

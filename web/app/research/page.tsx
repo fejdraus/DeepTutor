@@ -108,9 +108,9 @@ export default function ResearchPage() {
     }
   }, [chatHistory]);
 
-  // Initial Greeting
+  // Initial Greeting — re-run when t() changes (language switch or i18n ready)
   useEffect(() => {
-    if (chatHistory.length === 0) {
+    if (chatHistory.length === 0 || (chatHistory.length === 1 && chatHistory[0].id === "welcome")) {
       setChatHistory([
         {
           id: "welcome",
@@ -121,8 +121,8 @@ export default function ResearchPage() {
         },
       ]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Only run on mount to set initial greeting
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Re-run when language changes
+  }, [t]);
 
   // Select latest active task automatically if none selected
   useEffect(() => {
@@ -335,10 +335,10 @@ export default function ResearchPage() {
                 className={`w-2 h-2 rounded-full ${state.global.stage !== "idle" && state.global.stage !== "completed" ? "bg-emerald-500 animate-pulse" : "bg-slate-300 dark:bg-slate-600"}`}
               />
               {state.global.stage === "idle"
-                ? "Idle"
+                ? t("Idle")
                 : state.global.stage === "completed"
-                  ? "Completed"
-                  : "Running"}
+                  ? t("Completed")
+                  : t("Running")}
             </div>
           </div>
 
@@ -380,7 +380,7 @@ export default function ResearchPage() {
                         : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
                     }`}
                   >
-                    {mode}
+                    {t(mode.charAt(0).toUpperCase() + mode.slice(1))}
                   </button>
                 ))}
               </div>
@@ -393,9 +393,9 @@ export default function ResearchPage() {
               </label>
               <div className="flex gap-2">
                 {[
-                  { key: "RAG", label: "RAG", icon: Database },
-                  { key: "Paper", label: "Paper", icon: GraduationCap },
-                  { key: "Web", label: "Web", icon: Globe },
+                  { key: "RAG", label: t("RAG"), icon: Database },
+                  { key: "Paper", label: t("Paper"), icon: GraduationCap },
+                  { key: "Web", label: t("Web"), icon: Globe },
                 ].map((tool) => {
                   const isSelected = enabledTools.includes(tool.key);
                   const Icon = tool.icon;
@@ -508,7 +508,7 @@ export default function ResearchPage() {
                   state.global.stage !== "idle" &&
                   state.global.stage !== "completed"
                     ? t("Research in progress...")
-                    : "Enter research topic..."
+                    : t("Enter research topic...")
                 }
                 disabled={
                   state.global.stage !== "idle" &&

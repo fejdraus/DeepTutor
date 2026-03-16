@@ -656,8 +656,7 @@ export default function IdeaGenPage() {
                 {t("Select notebook records or describe your research topic")}
                 <br />
                 <span className="text-xs text-slate-400 dark:text-slate-500 mt-2 block">
-                  You can select notebooks for context, or simply describe your
-                  research direction in the text field
+                  {t("You can select notebooks for context, or simply describe your research direction in the text field")}
                 </span>
               </p>
             </div>

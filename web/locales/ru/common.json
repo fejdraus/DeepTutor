@@ -3,8 +3,8 @@
   "language.chinese": "中文",
   "language.russian": "Русский",
   "language.ukrainian": "Українська",
-  "common.loading": "Loading...",
-  "common.save": "Save",
-  "common.cancel": "Cancel",
-  "common.close": "Close"
+  "common.loading": "Загрузка...",
+  "common.save": "Сохранить",
+  "common.cancel": "Отмена",
+  "common.close": "Закрыть"
 }

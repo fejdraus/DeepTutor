@@ -17,6 +17,29 @@ interface ConfigTabProps {
   t: (key: string) => string;
 }
 
+// Translate known backend strings that aren't i18n-aware
+function translateBackendMessage(message: string, t: (key: string) => string): string {
+  // Config names
+  if (message === "Default (from .env)") return t("Default (from .env)");
+  // Test results: "Connection successful" or "Connection successful (dim=768)"
+  if (message.startsWith("Connection successful")) {
+    const extra = message.slice("Connection successful".length);
+    return t("Connection successful") + extra;
+  }
+  // "Connection failed: <error details>"
+  if (message.startsWith("Connection failed: ")) {
+    const detail = message.slice("Connection failed: ".length);
+    return `${t("Connection failed")}: ${detail}`;
+  }
+  if (message === "Connection failed") return t("Connection failed");
+  // "Configuration is incomplete (missing field_name)"
+  const incompleteMatch = message.match(/^Configuration is incomplete \(missing (.+)\)$/);
+  if (incompleteMatch) {
+    return `${t("Configuration is incomplete")} (missing ${incompleteMatch[1]})`;
+  }
+  return message;
+}
+
 export default function ConfigTab({
   configType,
   title,
@@ -175,7 +198,7 @@ export default function ConfigTab({
               : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800"
           }`}
         >
-          {testResult.message}
+          {translateBackendMessage(testResult.message, t)}
         </div>
       )}
 
@@ -198,7 +221,7 @@ export default function ConfigTab({
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-slate-900 dark:text-slate-100">
-                      {config.name}
+                      {translateBackendMessage(config.name, t)}
                     </span>
                     {config.is_default && (
                       <span className="px-2 py-0.5 text-xs bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 rounded">

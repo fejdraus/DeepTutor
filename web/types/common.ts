@@ -37,7 +37,7 @@ export type Theme = "light" | "dark";
 /**
  * Supported languages
  */
-export type Language = "en" | "zh";
+export type Language = "en" | "zh" | "ru" | "uk";
 
 /**
  * UI Settings

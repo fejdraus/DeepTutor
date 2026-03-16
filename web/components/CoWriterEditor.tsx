@@ -1474,7 +1474,7 @@ export default function CoWriterEditor({
               )}
             </div>
             <div className="text-[10px] text-slate-400 dark:text-slate-500">
-              {content.length} chars · {content.split("\n").length} lines
+              {content.length} {t("chars")} · {content.split("\n").length} {t("lines")}
             </div>
           </div>
           <div ref={editorContainerRef} className="flex-1 overflow-y-hidden">

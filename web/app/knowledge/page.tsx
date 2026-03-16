@@ -1256,7 +1256,17 @@ export default function KnowledgePage() {
                         <div className="mt-2 space-y-1">
                           <div className="text-[10px] text-slate-600 dark:text-slate-400 font-medium flex items-center justify-between">
                             <span>
-                              {progress?.message || `Status: ${status}`}
+                              {(() => {
+                                const msg = progress?.message || `Status: ${status}`;
+                                // Translate known backend progress messages
+                                if (msg === "Knowledge base initialization complete!") return t("Knowledge base initialization complete!");
+                                if (msg === "Initializing knowledge base...") return t("Initializing knowledge base...");
+                                if (msg.startsWith("Found ") && msg.includes("documents")) {
+                                  const match = msg.match(/Found (\d+) documents?, starting to process/);
+                                  if (match) return `${t("Found")} ${match[1]} ${t("documents")}, ${t("starting to process")}...`;
+                                }
+                                return msg;
+                              })()}
                             </span>
                             {/* Clear button for stuck states */}
                             {progress?.stage !== "completed" &&
@@ -1287,7 +1297,7 @@ export default function KnowledgePage() {
                             progress.current > 0 &&
                             progress.total > 0 && (
                               <div className="text-[10px] text-slate-400 dark:text-slate-500">
-                                File {progress.current} of {progress.total}
+                                {t("File")} {progress.current} {t("of")} {progress.total}
                               </div>
                             )}
                           {progress?.error && (

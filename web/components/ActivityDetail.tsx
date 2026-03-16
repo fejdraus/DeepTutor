@@ -102,7 +102,7 @@ export default function ActivityDetail({
                 {t("Type")}
               </div>
               <div className="font-medium text-slate-900 dark:text-slate-100 capitalize">
-                {activity.type}
+                {t(activity.type.charAt(0).toUpperCase() + activity.type.slice(1))}
               </div>
             </div>
             <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-700">
@@ -161,13 +161,11 @@ export default function ActivityDetail({
                   </div>
                   <div className="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50">
                     <span className="font-bold">{t("Difficulty:")}</span>{" "}
-                    {activity.content?.requirement?.difficulty || t("N/A")}
+                    {(() => { const d = activity.content?.requirement?.difficulty; return d ? t(d.charAt(0).toUpperCase() + d.slice(1)) : t("N/A"); })()}
                   </div>
                   <div className="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50">
                     <span className="font-bold">{t("Type:")}</span>{" "}
-                    {activity.content?.requirement?.question_type ||
-                      activity.content?.question?.question_type ||
-                      t("N/A")}
+                    {(() => { const qt = activity.content?.requirement?.question_type || activity.content?.question?.question_type; return qt ? t(qt === "choice" ? "Multiple Choice" : "Written") : t("N/A"); })()}
                   </div>
                 </div>
               </div>
